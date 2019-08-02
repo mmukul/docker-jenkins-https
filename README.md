@@ -4,20 +4,21 @@
 
 ### Pre-requisite
 
-$ mkdir -p /var/jenkins_home /var/lib/jenkins/pubkey /var/lib/jenkins/cert \
-$ useradd -u 1000 -g 1000 -d /var/jenkins_home jenkins \
-$ chmod 1000:1000 /var/jenkins_home \
-$ cd /var/jenkins_home \
-$ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins.key -out jenkins.pem -subj "/CN=localhost" -days 365 \
-$ openssl rsa -in jenkins.key -out privkey-rsa.pem \
-$ cp privkey-rsa.pem /var/lib/jenkins/pubkey && cp server.pem /var/lib/jenkins/cert \
-$ chown -R jenkins:jenkins /var/lib/jenkins
+- A private SSL key (example.com.key)
+- An SSL certificate signed by a certificate authority (example.com.crt).
+- The SSL certificate of the certificate authority which did the signing (ca.crt).
+- To generate a Java Keystore requires:
 
+#### Reference your SSL certificates and key (listed above).
 
-$ docker run -d -p 443:4430 -v /var/jenkins_home:/var/jenkins_home --name jenkins jenkins/jenkins --env JAVA_OPTS="-Xmx8192m" --env JENKINS_OPTS=" --handlerCountMax=300 --httpPort=-1 --httpsPort=4430 --httpsCertificate=/var/lib/jenkins/cert --httpsPrivateKey=/var/lib/jenkins/pubkey"
+- Convert the SSL certificates into an intermediate format (PKCS12 keystore).
+- Convert the intermediate format into a Java Keystore (JKS keystore).
 
-### Method-2(Automated):-
+#### The following command will convert SSL certificates into the intermediate format (PKCS12)
 
-$ git clone <repo>
+$ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins.key -out jenkins.crt \
+  -subj "/CN=localhost" -days 365
 
-$ docker build -t myjenkins-tls .
+$ openssl pkcs12 -export -out jenkins_keystore.p12 \
+  -passout 'pass:changeit' -inkey jenkins.key \
+  -in jenkins.crt -certfile ca.crt -name jenkins-cert
