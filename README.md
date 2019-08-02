@@ -4,9 +4,9 @@
 
 ### Pre-requisite
 
-$ mkdir -p /var/jenkins_home /var/lib/jenkins /var/lib/jenkins/pubkey /var/lib/jenkins/cert
-$ useradd -u 1000 jenkins
-$ usermod -d /var/jenkins_home
+$ mkdir -p /var/jenkins_home /var/lib/jenkins /var/lib/jenkins/pubkey /var/lib/jenkins/cert \
+$ useradd -u 1000 jenkins \
+$ usermod -d /var/jenkins_home \
 $ chmod 1000:1000 /var/jenkins_home
 $ cd /var/jenkins_home
 $ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins.key -out jenkins.pem -subj "/CN=localhost" -days 365
