@@ -20,12 +20,12 @@ $ keytool -genkey -keyalg RSA -alias jenkins -keystore jenkins_keystore.jks -sto
 $ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins-ssl.key -out jenkins-ssl.pem -subj "/CN=localhost" -days 365
 
 ### Convert SSL certificates into the intermediate format (PKCS12)
-openssl pkcs12 -inkey jenkins-ssl.key -in jenkins-ssl.pem -export -out jenkins-cert.p12 -passout 'pass:mypassW0rd'
+$ openssl pkcs12 -inkey jenkins-ssl.key -in jenkins-ssl.pem -export -out jenkins-cert.p12 -passout 'pass:mypassW0rd'
 
 ### convert the intermediate format (PKCS12) to Java Keystore (JKS). This way Jenkins can use the JKS
 
-keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd' -srcstoretype PKCS12 -deststoretype JKS -destkeystore jenkins_keystore.jks -deststorepass 'mypassW0rd'
+$ keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd' -srcstoretype PKCS12 -deststoretype JKS -destkeystore jenkins_keystore.jks -deststorepass 'mypassW0rd'
 
 
 ### Run Jenkins in a Docker container
-docker run --rm -e "TZ=America/Chicago" --name jenkins-july-container  -v /home/ec2-user/.ssh:/var/jenkins_home/.ssh -v data2:/var/jenkins_home -p 443:8443 -p 9080:8080 -p 50000:50000 -p 22:22 --env JENKINS_ARGS="--httpPort=-1 -httpsPort=8443 --httpsKeyStore=/home/ec2-user/jenkins-tls/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd" jenkins-march
+$ docker run --rm -d  -v /var/jenkins_home:/var/jenkins_home -p 443:8443 -p 8080:8080 -p 50000:50000 --env JENKINS_ARGS="--httpPort=-1 -httpsPort=8443 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --env JAVA_OPTS="-Xmx8192m" --httpsKeyStorePassword=mypassW0rd" Jenkins-march
