@@ -16,6 +16,7 @@
 ### Create a Java Keystore
 $ keytool -genkey -keyalg RSA -alias jenkins -keystore jenkins_keystore.jks -storepass mypassW0rd -keypass mypassW0rd -keysize 2048 -dname "CN=CA"
 
+### Create TLS/SSL certs
 $ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins-ssl.key -out jenkins-ssl.pem -subj "/CN=localhost" -days 365
 
 ### Convert SSL certificates into the intermediate format (PKCS12)
