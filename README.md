@@ -28,5 +28,4 @@ keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd'
 
 
 ### Run Jenkins in a Docker container
-docker run -p 443:443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=443" jenkins
-
+docker run --rm -e "TZ=America/Chicago" --name jenkins-july-container  -v /home/ec2-user/.ssh:/var/jenkins_home/.ssh -v data2:/var/jenkins_home -p 443:8443 -p 9080:8080 -p 50000:50000 -p 22:22 --env JENKINS_ARGS="--httpPort=-1 -httpsPort=8443 --httpsKeyStore=/home/ec2-user/jenkins-tls/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd" jenkins-march
