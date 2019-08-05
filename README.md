@@ -45,4 +45,4 @@ $ iptables -A FORWARD -i eth0 -m state --state NEW -m tcp -p tcp -d 127.0.0.1 --
 $ iptables -t nat -A OUTPUT -p tcp --dport 443 -d 127.0.0.1 -j DNAT --to-destination 127.0.0.1:8443
 
 ### Run Jenkins in a Docker container
-$ docker run --rm --name jenkins-aug-container -p 443:443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=443" Jenkins-march
+$ docker run --rm --name jenkins-aug-container -p 443:443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=443" Jenkins/jenkins
