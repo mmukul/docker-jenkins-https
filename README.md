@@ -1,24 +1,31 @@
 # docker-jenkins-ssl
 
-### Method-1(Manual):-
-
 ### Pre-requisite
 
-- A private SSL key (example.com.key)
-- An SSL certificate signed by a certificate authority (example.com.crt).
-- The SSL certificate of the certificate authority which did the signing (ca.crt).
+- A private SSL key (*.key)
+- An SSL certificate signed by a certificate authority (*.crt)
+- The SSL certificate of the certificate authority which did the signing (ca.crt)
 - To generate a Java Keystore requires:
 
-#### Reference your SSL certificates and key (listed above).
+#### Reference your SSL certificates and key (listed above)
 
-- Convert the SSL certificates into an intermediate format (PKCS12 keystore).
-- Convert the intermediate format into a Java Keystore (JKS keystore).
+- Convert the SSL certificates into an intermediate format (PKCS12 keystore)
+- Convert the intermediate format into a Java Keystore (JKS keystore)
 
-#### The following command will convert SSL certificates into the intermediate format (PKCS12)
 
-$ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins.key -out jenkins.crt \
-  -subj "/CN=localhost" -days 365
+### Create a Java Keystore
+$ keytool -genkey -keyalg RSA -alias jenkins -keystore jenkins_keystore.jks -storepass mypassW0rd -keypass mypassW0rd -keysize 2048 -dname "CN=CA"
 
-$ openssl pkcs12 -export -out jenkins_keystore.p12 \
-  -passout 'pass:changeit' -inkey jenkins.key \
-  -in jenkins.crt -certfile ca.crt -name jenkins-cert
+$ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout jenkins-ssl.key -out jenkins-ssl.pem -subj "/CN=localhost" -days 365
+
+### Convert SSL certificates into the intermediate format (PKCS12)
+openssl pkcs12 -inkey jenkins-ssl.key -in jenkins-ssl.pem -export -out jenkins-cert.p12 -passout 'pass:mypassW0rd'
+
+### convert the intermediate format (PKCS12) to Java Keystore (JKS). This way Jenkins can use the JKS
+
+keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd' -srcstoretype PKCS12 -deststoretype JKS -destkeystore jenkins_keystore.jks -deststorepass 'mypassW0rd'
+
+
+### Run Jenkins in a Docker container
+docker run -p 443:443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=443" jenkins
+
