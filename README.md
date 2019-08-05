@@ -5,7 +5,8 @@
 - A private SSL key (*.key)
 - An SSL certificate signed by a certificate authority (*.crt)
 - The SSL certificate of the certificate authority which did the signing (ca.crt)
-- To generate a Java Keystore requires:
+- To generate a Java Keystore requires
+- Open EC2 security group to allow for 8443 and 443 ports
 
 #### Reference your SSL certificates and key (listed above)
 
