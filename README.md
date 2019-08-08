@@ -51,3 +51,9 @@ sudo firewall-cmd --reload
 ```
 $ docker run --rm --name jenkins-aug-container -p 443:8443 -p 50000:50000 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=8443" --env JAVA_OPTS="-Xmx8192m" <Image>
 ```
+
+### Access Jenkins UI
+
+```
+$ curl https://localhost:8443
+```
