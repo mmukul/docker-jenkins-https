@@ -38,16 +38,16 @@ $ openssl pkcs12 -inkey jenkins-ssl.key -in jenkins-ssl.pem -export -out jenkins
 $ keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd' -srcstoretype PKCS12 -deststoretype JKS -destkeystore jenkins_keystore.jks -deststorepass 'mypassW0rd'
 ```
 
-### Run Jenkins in a Docker container
-
-```
-$ docker run --rm --name jenkins-aug-container -p 8443:8443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=8443" Jenkins/jenkins
-```
-
 ## Running Jenkins on Port 443 using iptables
 
 ```
 sudo firewall-cmd --add-port=443/tcp --permanent
 sudo firewall-cmd --add-forward-port=port=443:proto=tcp:toaddr=127.0.0.1:toport=8443 --permanent
 sudo firewall-cmd --reload
+```
+
+### Run Jenkins in a Docker container
+
+```
+$ docker run --rm --name jenkins-aug-container -p 443:8443 --env JENKINS_ARGS="--httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=mypassW0rd --httpsPort=8443" Jenkins/jenkins
 ```
