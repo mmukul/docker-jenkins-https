@@ -8,7 +8,7 @@
 - To generate a Java Keystore requires
 - Open EC2 security group to allow for 8443 and 443 ports
 
-#### Reference your SSL certificates and key (listed above)
+### Reference your SSL certificates and key (listed above)
 
 - Convert the SSL certificates into an intermediate format (PKCS12 keystore)
 - Convert the intermediate format into a Java Keystore (JKS keystore)
@@ -38,7 +38,7 @@ $ sudo openssl pkcs12 -inkey jenkins-ssl.key -in jenkins-ssl.pem -export -out je
 $ sudo keytool -importkeystore -srckeystore jenkins-cert.p12 -srcstorepass 'mypassW0rd' -srcstoretype PKCS12 -deststoretype JKS -destkeystore jenkins_keystore.jks -deststorepass 'mypassW0rd'
 ```
 
-## Running Jenkins on Port 443 using iptables
+### Running Jenkins on Port 443 using iptables
 
 ```
 sudo firewall-cmd --add-port=443/tcp --permanent
