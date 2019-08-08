@@ -40,13 +40,15 @@ $ docker run --rm --name jenkins-aug-container -p 8443:8443 --env JENKINS_ARGS="
 
 1. In order to forward traffic from 80/443 to 8080/8443, first you must ensure that iptables has allowed traffic on all 4 of these ports with following command,
 
+```
 $ iptables -L -n
+```
 
 2. If you don't see entries for these ports, then you need to run following commands (as root or with sudo) to add those ports,
 
-~
+```
 sudo iptables -I INPUT 1 -p tcp --dport 8443 -j ACCEPT
 sudo iptables -I INPUT 1 -p tcp --dport 8080 -j ACCEPT
 sudo iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
 sudo iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
-~
+```
